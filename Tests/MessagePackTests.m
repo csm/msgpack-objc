@@ -169,12 +169,31 @@
 
 - (void)testNull {
     // minimal example, array with a single null
-    NSData *data = [[NSData alloc] initWithBase64EncodedString: @"kcA=" options: 0];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:@"kcA=" options:0];
     NSObject *unpacked = [MessagePack unpackData: data];
     XCTAssertNotNil(unpacked);
     XCTAssertTrue([unpacked isKindOfClass: [NSArray class]]);
     XCTAssertEqual(1, [((NSArray *) unpacked) count]);
     XCTAssertTrue([[((NSArray *) unpacked) objectAtIndex: 0] isKindOfClass: [NSNull class]]);
+    NSData *encoded = [MessagePack packObject: @[[NSNull null]]];
+    XCTAssertTrue([data isEqual: encoded]);
+    // example with a map {"null": null}
+    NSData *data2 = [[NSData alloc] initWithBase64EncodedString:@"gaRudWxswA==" options:0];
+    NSObject *unpacked2 = [MessagePack unpackData: data2];
+    XCTAssertNotNil(unpacked2);
+    XCTAssertTrue([unpacked2 isKindOfClass: [NSDictionary class]]);
+    XCTAssertEqual(1, [((NSDictionary *) unpacked2) count]);
+    XCTAssertNotNil([((NSDictionary *) unpacked2) valueForKey: @"null"]);
+    XCTAssertTrue([[((NSDictionary *) unpacked2) valueForKey: @"null"] isKindOfClass: [NSNull class]]);
+    NSData *encoded2 = [MessagePack packObject: @{@"null": [NSNull null]}];
+    XCTAssertTrue([data2 isEqual: encoded2]);
+    // Just a single null itself
+    NSData *data3 = [[NSData alloc] initWithBase64EncodedString:@"wA==" options:0];
+    NSObject *unpacked3 = [MessagePack unpackData: data3];
+    XCTAssertNotNil(unpacked3);
+    XCTAssertTrue([unpacked3 isKindOfClass: [NSNull class]]);
+    NSData *encoded3 = [MessagePack packObject: [NSNull null]];
+    XCTAssertTrue([data3 isEqual: encoded3]);
 }
 
 @end
