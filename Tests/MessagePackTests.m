@@ -167,4 +167,14 @@
     }
 }
 
+- (void)testNull {
+    // minimal example, array with a single null
+    NSData *data = [[NSData alloc] initWithBase64EncodedString: @"kcA=" options: 0];
+    NSObject *unpacked = [MessagePack unpackData: data];
+    XCTAssertNotNil(unpacked);
+    XCTAssertTrue([unpacked isKindOfClass: [NSArray class]]);
+    XCTAssertEqual(1, [((NSArray *) unpacked) count]);
+    XCTAssertTrue([[((NSArray *) unpacked) objectAtIndex: 0] isKindOfClass: [NSNull class]]);
+}
+
 @end
