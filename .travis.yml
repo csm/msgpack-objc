@@ -1,0 +1,4 @@
+language: objective-c
+xcode_project: msgpack-objc.xcodeproj
+xcode_scheme: Tests
+xcode_destination: platform=iOS Simulator,OS=12.2,name=iPhone 8
