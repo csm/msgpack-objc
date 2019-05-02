@@ -101,6 +101,8 @@ void packObject(id object, msgpack_packer *packer)
         NSData *data = (NSData *)object;
         msgpack_pack_bin(packer, data.length);
         msgpack_pack_bin_body(packer, data.bytes, data.length);
+    } else if ([object isKindOfClass: [NSNull class]]) {
+        msgpack_pack_nil(packer);
     } else {
         // Try to find a registered extension that supports unpacking of this object
         __block BOOL extensionFound;
@@ -180,7 +182,7 @@ id objectForMessagePackObject(msgpack_object object)
 {
     switch (object.type) {
         case MSGPACK_OBJECT_NIL:
-            return nil;
+            return [NSNull null];
 
         case MSGPACK_OBJECT_BOOLEAN:
             return @(object.via.boolean);
